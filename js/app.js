@@ -63,7 +63,6 @@ var kittenView = {
 		this.kittenCountElem = document.getElementbyId('kitten_click');
 
 		// make the on-click function to increment counter
-
 		this.kittenImageElem.addEventListener('click', function() {
 			// use controller to increase count in model 
 		})
@@ -72,16 +71,43 @@ var kittenView = {
 	},
 
 	render: function() {
-		var currentKat = octopus.getCurrentCat(); // use ocotopus to get model to see which cat
+		var currentKat = octopus.getCurrentKitten(); // use ocotopus to get model to see which cat
 		this.kittenCountElem.textContent = currentKat.clickCount;
 		this.kittenImageElem.src = currentKat.imgSrc; 
 		this.kittenNameElem.textContent = currentKat.name; 
 	}
 };
 
-var Kitten
+var kittenList = {
+    init: function() {
+        this.kittenListElem = document.getElementbyId('kitten-list');
+        this.render; 
+    },
 
+    render: function() {
+        var kitten, elem, i; 
 
+        var kittens = ocotopus.getKittens(); // need to use octopus to get all kitten
+        this.kittenListElem.innerHTML = ''; //empties out array
+        for (i=0; i<kittens.length; i++) {
+            kitten = kittens[i]
+
+            elem = document.createElement('li');
+            elem.text = kitten.name; 
+
+            // create the event for when clicking the image of the cat changes
+            elem.addEventListener('click', (function(kittenCopy) {
+                return function() {
+                    ocotpus.setCurrentKitten(kittenCopy); // use ocotopus to find the current kitten
+                    kittenView.render();   
+                };
+            })(kitten)); 
+            this.KittenListElem.appendChild(elem);
+        }
+    }
+};
+
+ocotopus.init(); 
 
 
 
