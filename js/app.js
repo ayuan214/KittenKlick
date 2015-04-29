@@ -1,6 +1,6 @@
 // ******************** MODEL ************************
 var model = {
-	currentKat: null;
+	currentKat: null,
 	kittens: [
 		{
             clickCount : 0,
@@ -32,7 +32,6 @@ var model = {
             imgSrc : 'img/9648464288_2516b35537_z.jpg',
             imgAttribution : 'https://www.flickr.com/photos/onesharp/9648464288'
         }
-		}
 	]
 };
 
@@ -40,11 +39,31 @@ var model = {
 //********************** Controller **************************
 
 var octopus = {
-	init: function() {
+
+	init: function() { 
+        model.currentKat = model.kittens[0]; // sets initial kat
+
 		kittenView.init();
 		kittenList.init(); 
-	}
-}
+	},
+
+    getCurrentKitten: function() {
+        return model.currentKat;
+    },
+
+    getKittens: function() {
+        return model.kittens; 
+    },
+
+    setCurrentKitten: function (kat) {
+        model.currentKat = kat;
+    },
+
+    kittenadd: function() {
+        model.currentKat.clickCount ++; 
+        kittenView.render(); 
+    }
+};
 
 
 
@@ -57,14 +76,15 @@ var octopus = {
 var kittenView = {
 	init: function() {
 		// stores pointers 
-		this.kittenElem = document.getElementbyId ('kitten');
-		this.kittenNameElem = document.getElementbyId('kitten_name');
-		this.kittenImageElem = document.getElementbyId('kitten_pic');
-		this.kittenCountElem = document.getElementbyId('kitten_click');
+		this.kittenElem = document.getElementById('kitten');
+		this.kittenNameElem = document.getElementById('kitten_name');
+		this.kittenImageElem = document.getElementById('kitten_pic');
+		this.kittenCountElem = document.getElementById('kitten_click');
 
 		// make the on-click function to increment counter
 		this.kittenImageElem.addEventListener('click', function() {
 			// use controller to increase count in model 
+            octopus.kittenadd(); 
 		})
 
 		this.render();
@@ -80,37 +100,32 @@ var kittenView = {
 
 var kittenList = {
     init: function() {
-        this.kittenListElem = document.getElementbyId('kitten-list');
-        this.render; 
+        this.kittenListElem = document.getElementById('kitten_list');
+        this.render(); 
     },
 
     render: function() {
         var kitten, elem, i; 
 
-        var kittens = ocotopus.getKittens(); // need to use octopus to get all kitten
+        var kittens = octopus.getKittens(); // need to use octopus to get all kitten
         this.kittenListElem.innerHTML = ''; //empties out array
+
         for (i=0; i<kittens.length; i++) {
-            kitten = kittens[i]
+            kitten = kittens[i];
 
             elem = document.createElement('li');
-            elem.text = kitten.name; 
+            elem.textContent = kitten.name; 
 
             // create the event for when clicking the image of the cat changes
             elem.addEventListener('click', (function(kittenCopy) {
                 return function() {
-                    ocotpus.setCurrentKitten(kittenCopy); // use ocotopus to find the current kitten
+                    octopus.setCurrentKitten(kittenCopy); // use ocotopus to find the current kitten
                     kittenView.render();   
                 };
             })(kitten)); 
-            this.KittenListElem.appendChild(elem);
+            this.kittenListElem.appendChild(elem);
         }
     }
 };
 
-ocotopus.init(); 
-
-
-
-
-
-
+octopus.init(); 
